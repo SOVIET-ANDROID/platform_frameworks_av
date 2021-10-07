@@ -436,18 +436,16 @@ void C2SoftMpeg4Enc::process(
         }
 
         ++mNumInputFrames;
-        if (outputSize) {
-            std::unique_ptr<C2StreamInitDataInfo::output> csd =
-                C2StreamInitDataInfo::output::AllocUnique(outputSize, 0u);
-            if (!csd) {
-                ALOGE("CSD allocation failed");
-                mSignalledError = true;
-                work->result = C2_NO_MEMORY;
-                return;
-            }
-            memcpy(csd->m.value, outPtr, outputSize);
-            work->worklets.front()->output.configUpdate.push_back(std::move(csd));
+        std::unique_ptr<C2StreamInitDataInfo::output> csd =
+            C2StreamInitDataInfo::output::AllocUnique(outputSize, 0u);
+        if (!csd) {
+            ALOGE("CSD allocation failed");
+            mSignalledError = true;
+            work->result = C2_NO_MEMORY;
+            return;
         }
+        memcpy(csd->m.value, outPtr, outputSize);
+        work->worklets.front()->output.configUpdate.push_back(std::move(csd));
     }
 
     std::shared_ptr<const C2GraphicView> rView;
