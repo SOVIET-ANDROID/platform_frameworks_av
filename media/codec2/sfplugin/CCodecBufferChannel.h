@@ -240,9 +240,7 @@ private:
     void feedInputBufferIfAvailable();
     void feedInputBufferIfAvailableInternal();
     void queueDummyWork();
-    status_t queueInputBufferInternal(sp<MediaCodecBuffer> buffer,
-                                      std::shared_ptr<C2LinearBlock> encryptedBlock = nullptr,
-                                      size_t blockSize = 0);
+    status_t queueInputBufferInternal(sp<MediaCodecBuffer> buffer);
     bool handleWork(
             std::unique_ptr<C2Work> work, const sp<AMessage> &outputFormat,
             const C2StreamInitDataInfo::output *initData);
@@ -322,7 +320,6 @@ private:
     inline bool hasCryptoOrDescrambler() {
         return mCrypto != nullptr || mDescrambler != nullptr;
     }
-    std::atomic_bool mSendEncryptedInfoBuffer;
 };
 
 // Conversion of a c2_status_t value to a status_t value may depend on the
